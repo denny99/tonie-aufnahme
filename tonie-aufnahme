@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+"""tonie-aufnahme – Kommandozeile zur Tonie-Aufnahme (die App: Tonie-Aufnahme im Menü)."""
+import argparse, signal, sys, threading
+from pathlib import Path
+sys.path.insert(0, str(Path.home() / ".local/share/tonie-aufnahme"))
+import recorder
+
+ap = argparse.ArgumentParser(description=__doc__)
+ap.add_argument("-m", "--minuten", type=float, default=90)
+ap.add_argument("-z", "--ziel")
+ap.add_argument("-l", "--mithoeren", action="store_true")
+a = ap.parse_args()
+stopp = threading.Event()
+signal.signal(signal.SIGINT, lambda *_: stopp.set())  # Strg+C: aufhören, fertige Lieder schneiden
+try:
+    recorder.aufnehmen(a.minuten, a.ziel, a.mithoeren, stopp=stopp,
+                       melde=lambda art, **d: print(art, d, flush=True))
+except recorder.Fehler as e:
+    sys.exit(str(e))

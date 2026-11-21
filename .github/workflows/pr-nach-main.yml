@@ -1,0 +1,15 @@
+name: PR-Regeln
+on:
+  pull_request:
+    branches: [main]
+jobs:
+  nur-develop:
+    name: nur-develop
+    runs-on: ubuntu-latest
+    steps:
+      - name: PRs nach main kommen nur aus develop
+        run: |
+          if [ "${{ github.head_ref }}" != "develop" ] || [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+            echo "Bitte den Pull Request gegen develop stellen, nicht gegen main."
+            exit 1
+          fi

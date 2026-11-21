@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Tonie-Aufnahme
+Comment=Spotify-Playlist aufnehmen und für den Kreativ-Tonie in Lieder schneiden
+Exec=python3 -I @APP@/app.py
+Icon=@APP@/bilder/app-icon.png
+Terminal=false
+Categories=AudioVideo;Audio;Recorder;
+StartupWMClass=tonie-aufnahme

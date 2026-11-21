@@ -1,0 +1,13 @@
+name: Prüfen
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+jobs:
+  syntax:
+    name: syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m py_compile tonie_aufnahme/app.py tonie_aufnahme/recorder.py tonie-aufnahme
+      - run: bash -n install.sh && bash -n uninstall.sh
