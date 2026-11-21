@@ -2,7 +2,8 @@
 """tonie-aufnahme – Kommandozeile zur Tonie-Aufnahme (die App: Tonie-Aufnahme im Menü)."""
 import argparse, signal, sys, threading
 from pathlib import Path
-sys.path.insert(0, str(Path.home() / ".local/share/tonie-aufnahme"))
+# installiert: <präfix>/bin/tonie-aufnahme und <präfix>/share/tonie-aufnahme (~/.local oder /usr)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "share/tonie-aufnahme"))
 import recorder
 
 ap = argparse.ArgumentParser(description=__doc__)

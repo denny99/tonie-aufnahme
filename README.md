@@ -27,17 +27,28 @@ Gut zu wissen:
 
 ## Installieren
 
-1. Oben auf **Code → Download ZIP** klicken und die ZIP-Datei entpacken (oder `git clone` für alle, die Git kennen).
-2. Im entpackten Ordner ein Terminal öffnen und eingeben:
+Lade unter [Releases](../../releases/latest) die passende Datei herunter:
 
-   ```bash
-   ./install.sh
-   ```
+- **Debian 13, Ubuntu 25.04 oder neuer:** die `.deb`-Datei. Doppelt anklicken und installieren; alles Nötige kommt automatisch mit.
+- **Jedes andere Linux** (Arch, Fedora, ältere Ubuntu …): das `AppImage`. Rechtsklick → Eigenschaften → „Ausführbar“ anhaken, dann doppelt anklicken. Dafür müssen `ffmpeg`, `playerctl` und die PulseAudio-Werkzeuge installiert sein (siehe unten).
 
-3. Fehlt etwas, sagt dir das Skript, welchen Befehl du für dein System eingeben musst. Danach `./install.sh` noch einmal starten.
-4. Die App heißt jetzt **Tonie-Aufnahme** und steht im Startmenü.
+Danach heißt die App **Tonie-Aufnahme**.
+
+<details>
+<summary>Ohne Paket, direkt aus dem Quellcode</summary>
+
+1. Oben auf **Code → Download ZIP** klicken und entpacken (oder `git clone`).
+2. Im Ordner ein Terminal öffnen und `./install.sh` eingeben.
+3. Fehlt etwas, sagt dir das Skript, welchen Befehl du für dein System eingeben musst.
 
 Deinstallieren geht mit `./uninstall.sh`. Deine Aufnahmen bleiben dabei erhalten.
+
+Programme, die fürs AppImage und den Quellcode auf dem System sein müssen:
+
+- Arch/CachyOS: `sudo pacman -S playerctl ffmpeg libpulse` (für den Quellcode zusätzlich `pyside6`)
+- Fedora: `sudo dnf install playerctl ffmpeg pulseaudio-utils` (zusätzlich `python3-pyside6`)
+- Ubuntu/Debian: `sudo apt install playerctl ffmpeg pulseaudio-utils` (zusätzlich `python3-pyside6.qtwidgets`)
+</details>
 
 ## So nimmst du auf
 
