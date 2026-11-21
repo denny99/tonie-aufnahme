@@ -158,7 +158,7 @@ class Fenster(QMainWindow):
         self.sp_status = lbl("", wrap=True)
         cl.addWidget(self.sp_status)
         self.sp_btn = knopf("Spotify öffnen", "spotify")
-        self.sp_btn.clicked.connect(lambda: subprocess.Popen(["spotify-launcher"], start_new_session=True))
+        self.sp_btn.clicked.connect(self._spotify_starten)
         h = QHBoxLayout()
         h.addWidget(self.sp_btn)
         h.addStretch()
@@ -269,12 +269,30 @@ class Fenster(QMainWindow):
         if p:
             self._ziel_setzen(p)
 
+    def _spotify_starten(self):
+        """Spotify öffnen, egal ob als Arch-Paket, .deb/Snap oder Flatpak installiert."""
+        import shutil
+        for befehl in (["spotify-launcher"], ["spotify"], ["flatpak", "run", "com.spotify.Client"]):
+            if shutil.which(befehl[0]) and (befehl[0] != "flatpak" or subprocess.run(
+                    ["flatpak", "info", "com.spotify.Client"], capture_output=True).returncode == 0):
+                subprocess.Popen(befehl, start_new_session=True)
+                return
+        QMessageBox.information(self, "Spotify fehlt",
+                                "Die Spotify-App ist nicht installiert. Installiere sie über die Softwareverwaltung "
+                                "deines Systems (z. B. „Spotify“ in Discover oder GNOME Software) und versuch es noch einmal.")
+
     def _spotify_pruefen(self):
         if self.stack.currentIndex() != 0:
             return
         status, song = recorder.spotify_info()
         bereit = status is not None and song.strip(" –") != ""
-        if status is None:
+        fehlt = recorder.fehlende_programme()
+        if fehlt:
+            status, bereit = None, False
+            self.sp_status.setText("Auf diesem Rechner fehlt noch: " + ", ".join(fehlt)
+                                   + ". Installiere es (siehe README) und starte die App neu.")
+            self.sp_status.setProperty("class", "warn")
+        elif status is None:
             self.sp_status.setText("Spotify ist nicht offen.")
             self.sp_status.setProperty("class", "warn")
         elif not bereit:
@@ -287,8 +305,7 @@ class Fenster(QMainWindow):
         self.sp_btn.setVisible(status is None)
         self.sp_status.style().polish(self.sp_status)
 
-        zufall = subprocess.run(["playerctl", "-p", "spotify", "shuffle"], text=True,
-                                capture_output=True).stdout.strip() if status else ""
+        zufall = recorder.pc("shuffle").stdout.strip() if status else ""
         self._check(self.chk_zufall, zufall != "On",
                     "Zufallswiedergabe ist aus" if zufall == "Off" else "Zufallswiedergabe aus",
                     "Zufallswiedergabe ist an – in Spotify ausschalten, sonst stimmt die Reihenfolge nicht")

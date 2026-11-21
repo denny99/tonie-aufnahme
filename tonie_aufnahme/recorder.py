@@ -6,6 +6,7 @@ Liedwechsel kommen über MPRIS (playerctl). Geschnitten wird an der Byte-Positio
 import json
 import queue
 import re
+import shutil
 import subprocess
 import threading
 import time
@@ -26,8 +27,19 @@ def sh(*a):
     return subprocess.run(a, check=True, text=True, capture_output=True).stdout.strip()
 
 
+NOETIG = ("playerctl", "parec", "pactl", "ffmpeg", "ffprobe")
+
+
+def fehlende_programme():
+    """Die Programme, die die Aufnahme braucht und die auf diesem Rechner fehlen."""
+    return [p for p in NOETIG if shutil.which(p) is None]
+
+
 def pc(*a):
-    return subprocess.run(["playerctl", "-p", "spotify", *a], text=True, capture_output=True)
+    try:
+        return subprocess.run(["playerctl", "-p", "spotify", *a], text=True, capture_output=True)
+    except FileNotFoundError:
+        return subprocess.CompletedProcess(["playerctl"], 127, "", "playerctl fehlt")
 
 
 def spotify_info():
