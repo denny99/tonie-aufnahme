@@ -3,7 +3,7 @@
 # ffmpeg, playerctl und parec/pactl kommen vom System.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-V=${1:-$(cat VERSION)}
+V=${1:-0.0.0-dev}
 W=build/appimage; rm -rf $W; mkdir -p $W dist
 URL=$(curl -fsSL https://api.github.com/repos/niess/python-appimage/releases/tags/python3.12 \
   | python3 -c 'import json,sys; print(next(a["browser_download_url"] for a in json.load(sys.stdin)["assets"] if a["name"].endswith("cp312-cp312-manylinux_2_28_x86_64.AppImage")))')
@@ -24,6 +24,7 @@ EOT
 chmod +x $A/AppRun
 sed -e 's#^Exec=.*#Exec=AppRun#' -e 's#^Icon=.*#Icon=tonie-aufnahme#' tonie-aufnahme.desktop > $A/tonie-aufnahme.desktop
 cp tonie_aufnahme/bilder/app-icon.png $A/tonie-aufnahme.png; ln -sf tonie-aufnahme.png $A/.DirIcon
+chmod -R a+rX $A; chmod 755 $A
 curl -fsSL -o $W/appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x $W/appimagetool
 ARCH=x86_64 $W/appimagetool --appimage-extract-and-run -n $A dist/Tonie-Aufnahme-${V}-x86_64.AppImage

@@ -2,7 +2,7 @@
 # Baut dist/tonie-aufnahme_<version>_all.deb (Debian 13, Ubuntu 25.04 und neuer).
 set -euo pipefail
 cd "$(dirname "$0")/.."
-V=${1:-$(cat VERSION)}
+V=${1:-0.0.0-dev}
 B=build/deb; rm -rf $B; mkdir -p $B/DEBIAN $B/usr/bin $B/usr/share/tonie-aufnahme $B/usr/share/applications \
   $B/usr/share/icons/hicolor/512x512/apps $B/usr/share/doc/tonie-aufnahme dist
 cp -r tonie_aufnahme/app.py tonie_aufnahme/recorder.py tonie_aufnahme/bilder $B/usr/share/tonie-aufnahme/

@@ -1,4 +1,4 @@
-Die erste Version der Tonie-Aufnahme: eine Spotify-Playlist unter Linux aufnehmen und als einzelne MP3s für den Kreativ-Tonie speichern.
+Tonie-Aufnahme: Spotify-Playlist unter Linux aufnehmen und als einzelne MP3s für den Kreativ-Tonie speichern.
 
 ## Welche Datei brauche ich?
 
